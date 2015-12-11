@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>Todo app</title>
+	<link rel="stylesheet" href="css/grid.css" />
+	<link rel="stylesheet" href="css/style.css" />
+	<style>
+		/*
+			Klicka en gång för att göra klar, men klicka på en knapp för att föra den till tom-listan.
+			Använd min animering. Listans position är alltid ul-offset + (höjd*index).
+		*/
+	</style>
+</head>
+<body>
+
+	<input data-add-text type="text" />
+	<button data-add>Add</button>
+
+	<ul class="item-list" data-unfinished="true">
+		
+	</ul>
+
+	<ul class="item-list" data-finished="true">
+		
+	</ul>
+
+	
+	<!-- Scripts -->
+	<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script src="js/js.cookie.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>

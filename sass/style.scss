@@ -1,0 +1,37 @@
+*{
+	box-sizing: border-box;
+}
+
+body{
+	padding: 200px;
+}
+
+/*** Item list styles ***/
+ul.item-list{
+	//position: relative;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li{
+		span{
+			position: relative;
+			// Line through
+			&:before{
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 0;
+				right: 100%;
+				height: 4px;
+				margin-top: -2px;
+				background: #000;
+			}
+		}
+		// Finished
+		&.finished{
+			span:before{
+				right: 0;
+			}
+		}
+	}
+}
