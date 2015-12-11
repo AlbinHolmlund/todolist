@@ -15,6 +15,7 @@ ul.item-list{
 	li{
 		span{
 			position: relative;
+			transition: all 0.4s;
 			// Line through
 			&:before{
 				content: '';
@@ -25,12 +26,17 @@ ul.item-list{
 				height: 4px;
 				margin-top: -2px;
 				background: #000;
+				transition: all 0.4s;
 			}
 		}
 		// Finished
 		&.finished{
-			span:before{
-				right: 0;
+			span{
+				color: red;
+				&:before{
+					right: 0;
+					background: red;
+				}
 			}
 		}
 	}
