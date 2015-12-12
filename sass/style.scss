@@ -1,41 +1,114 @@
+/* Try to add a reset? No? */
+
 *{
 	box-sizing: border-box;
 }
 
+// Vars
+$backClr: #fff; //#FFFFA5;
+
+// Breakpoints
+$bpMedium: 700px;
+
+// CSS
+html, body{
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	background: $backClr;
+}
 body{
-	padding: 200px;
+	padding: 20px;
+	font-family: Lato;
+	font-weight: 300;
+	font-size: 24px;
+}
+h2{
+	font-weight: 500;
+	margin: 0;
+}
+/* Medium screen */
+@media (min-width: $bpMedium){
+	body{
+		font-size: 48px;
+		padding: 60px;
+		
+		$borderW: 20px;
+		$borderClr: darken($backClr, 5);
+		border-left: $borderW solid $borderClr;
+		border-right: $borderW solid $borderClr;
+		&:before, &:after{
+			content: '';
+			position: fixed;
+			left: 0;
+			right: 0;
+			height: $borderW;
+			background: $borderClr;
+		}
+		&:before{
+			top: 0;
+		}
+		&:after{
+			bottom: 0;
+		}
+	}
+	h2{
+		font-size: 1.2em;
+	}
+}
+
+/*** Add input ****/
+.add-input{
+	// Reset
+	border: 0;
+	outline: 0;
+	background: 0;
+	font-size: inherit;
+	font-weight: inherit;
+	font-family: inherit;
+
+	// Own styles
+	border-bottom: 4px dashed #000;
+	padding: 10px 0;
+	width: 600px;
+	max-width: 100%;
 }
 
 /*** Item list styles ***/
+$ulDur: 0.4s;
 ul.item-list{
 	//position: relative;
-	margin: 0;
+	margin: 0 0 40px 0;
+	margin-top: 40px;
 	padding: 0;
 	list-style: none;
 	li{
+		margin-bottom: 10px;
+		cursor: pointer;
 		span{
 			position: relative;
-			transition: all 0.4s;
+			transition: all $ulDur;
 			// Line through
 			&:before{
 				content: '';
 				position: absolute;
 				top: 50%;
-				left: 0;
-				right: 100%;
+				left: -20px;
 				height: 4px;
-				margin-top: -2px;
+				width: 0;
+				//margin-top: -2px;
 				background: #000;
-				transition: all 0.4s;
+				transform: rotate(-1deg);
+				transition: all $ulDur;
 			}
 		}
 		// Finished
 		&.finished{
 			span{
-				color: red;
+				opacity: 0.3;
 				&:before{
-					right: 0;
-					background: red;
+					width: calc(100% + 40px);
 				}
 			}
 		}
