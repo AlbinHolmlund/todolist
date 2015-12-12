@@ -1,5 +1,7 @@
 (function (){
 
+	$('[data-add-text').focus();
+
 	// Elements
 	var $finishedUl = $('[data-finished]'), 
 		$unfinishedUl = $('[data-unfinished]');
@@ -104,17 +106,20 @@
 	$('body').on('click', '[data-item]', function (){
 		var $this = $(this),
 			index = $this.data('index'),
+			arrayIndex = null,
 			$parent = $this.parent();
+
+		// Get actual item index
+		var item = null;
+		items.forEach(function (val, i){
+			if (val.index == index){
+				item = val;
+				arrayIndex = i;
+			}
+		});
 
 		// Check if item is in finished or unfinishedul
 		if ($parent.data('unfinished')){
-			// Get actual item index
-			var item = null;
-			items.forEach(function (val){
-				if (val.index == index)
-					item = val;
-			});
-
 			// Error
 			if (item === null)
 				alert("Wtf? Why is it null");
@@ -141,12 +146,10 @@
 			}
 		} else if ($parent.data('finished')){
 			// Remove it
-			var $this = $(this),
-				index = $this.data('index');
-			finishedItems.splice(index, 1);
-			Cookies.set(finishedName, finishedItems);
+			items.splice(arrayIndex, 1);
+			Cookies.set(cookieName, items);
 
-			render();
+			$this.remove();
 		}
 	});
 
