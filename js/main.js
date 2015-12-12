@@ -5,22 +5,23 @@
 		$unfinishedUl = $('[data-unfinished]');
 
 	// Get items
-	var unfinishedName = 'unfinished',
-		unfinishedItems = Cookies.get(unfinishedName),
-		finishedName = 'finished',
-		finishedItems = Cookies.get(finishedName);
-
-	console.log(finishedItems);
+	var cookieName = 'todo-items',
+		items = Cookies.get(cookieName);
 
 	// Create array if not set, else parse it
-	if (!unfinishedItems)
-		unfinishedItems = [];
+	if (!items)
+		items = [];
 	else
-		unfinishedItems = JSON.parse(unfinishedItems);
-	if (!finishedItems)
-		finishedItems = [];
-	else
-		finishedItems = JSON.parse(finishedItems);
+		items = JSON.parse(items);
+
+	// Get finished and unfinished items
+	var unfinishedItems = items.filter(function (val){
+		return val.inFinishedUl === false;
+	});
+	var finishedItems = items.filter(function (val){
+		return val.inFinishedUl === true;
+	});
+	console.dir(items);
 	
 	// Append an item
 	function appendItem(ul, item, index){
@@ -40,49 +41,42 @@
 	}
 
 	// Append initial items
-	unfinishedItems.forEach(function (item, index){
-		appendItem($unfinishedUl, item, index);
+	unfinishedItems.forEach(function (item){
+		appendItem($unfinishedUl, item, item.index);
 	});
-	finishedItems.forEach(function (item, index){
-		appendItem($finishedUl, item, index);
+	finishedItems.forEach(function (item){
+		appendItem($finishedUl, item, item.index);
 	});
-
-	// Render items to list
-	function render() {
-		// Render both UL:s
-		console.log(unfinishedItems);
-	}
-	render();
 
 	/*** Actions ***/
 
 	// Add item
 	function addItem(){
+		// Get last index
+		var indexes = [];
+		items.forEach(function (val){
+			indexes.push(val.index);
+		});
+		var highestIndex = Math.max.apply(null, indexes),
+			newIndex = indexes.length > 0 ? highestIndex + 1 : 0;
+
+		// Vars
 		var $addInput = $('[data-add-text]'),
 			val = $addInput.val(),
 			item = {
 				finished: false,
-				text: val
+				inFinishedUl: false,
+				text: val,
+				index: newIndex
 			};
 
 		// Validate
 		if (!val)
 			return false;
 
-		// Get last index
-		var lastIndex = unfinishedItems[unfinishedItems.length-1];
-		if (lastIndex)
-			lastIndex = lastIndex.index + 1;
-		else
-			lastIndex = 0;
-
-		console.log(lastIndex);
-
-		item.index = lastIndex;
-
 		// Push
-		unfinishedItems.push(item);
-		Cookies.set(unfinishedName, unfinishedItems);
+		items.push(item);
+		Cookies.set(cookieName, items);
 
 		// Append
 		var $item = $('<li/>');
@@ -115,33 +109,35 @@
 		// Check if item is in finished or unfinishedul
 		if ($parent.data('unfinished')){
 			// Get actual item index
-			unfinishedItems.forEach(function (val){
+			var item = null;
+			items.forEach(function (val){
 				if (val.index == index)
-					index = val.index;
+					item = val;
 			});
+
+			// Error
+			if (item === null)
+				alert("Wtf? Why is it null");
 
 			// Check if item is finished or unfinished
 			if ($this.hasClass('unfinished')){
-				//alert("unfinished");
-				unfinishedItems[index].finished = true;
-				Cookies.set(unfinishedName, unfinishedItems);
+				// Set state to finished
+				item.finished = true;
+				Cookies.set(cookieName, items);
 
-				//render();
 				$(this)
 					.removeClass('unfinished')
 					.addClass('finished');
 			} else if ($this.hasClass('finished')) {
-				//alert("finished");
-				var item = unfinishedItems[index];
-				unfinishedItems.splice(index, 1);
-				finishedItems.push(item);
+				// Add to finished ul
+				item.inFinishedUl = true;
+				Cookies.set(cookieName, items);
 
-				Cookies.set(unfinishedName, unfinishedItems);
-				Cookies.set(finishedName, finishedItems);
+				console.log(item);
 
-				//render();
+				var $item = $this;
 				$this.remove();
-				// Make append item instead.
+				$finishedUl.prepend($item);
 			}
 		} else if ($parent.data('finished')){
 			// Remove it
