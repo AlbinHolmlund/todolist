@@ -1,7 +1,8 @@
 /* Try to add a reset? No? */
 @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900,700italic,400italic,300italic,100italic,100);
 * {
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; }
 
 html, body {
   margin: 0;
@@ -60,9 +61,12 @@ h2 {
 
 /*** Item list styles ***/
 ul.item-list {
-  margin: 0 0 80px 0;
+  margin: 0 0 20px 0;
   padding: 0;
   list-style: none; }
+  @media (min-width: 700px) {
+    ul.item-list {
+      margin: 0 0 80px 0; } }
   ul.item-list li {
     position: absolute;
     top: 0;
