@@ -29,15 +29,18 @@
 		// Set list height
 		$('[data-list]').each(function (){
 			var $this = $(this),
-				top = 0;
+				toHeight = 0,
+				curHeight = $this.outerHeight();
 
 			$this.find('[data-item]').each(function (){
-				top += $(this).outerHeight();
+				toHeight += $(this).outerHeight();
 			});
+
+			curHeight += (toHeight - curHeight) / 20;
 
 			$this
 				.css({
-					height: top
+					height: curHeight
 				});
 		});
 

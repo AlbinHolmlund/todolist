@@ -17,11 +17,14 @@ html, body{
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 100%;
 	background: $backClr;
+}
+html{
+	height: 100%;
 }
 body{
 	padding: 40px;
+	padding-bottom: 400px; // To test mobile
 	font-family: 'Lato', sans-serif;
 	font-weight: 300;
 	font-size: 24px;
@@ -75,14 +78,15 @@ h2{
 	padding: 10px 0;
 	width: 600px;
 	max-width: 100%;
+
+	margin-bottom: 40px;
 }
 
 /*** Item list styles ***/
 $ulDur: 0.4s;
 ul.item-list{
 
-	margin: 0 0 40px 0;
-	margin-top: 40px;
+	margin: 0 0 80px 0;
 	padding: 0;
 	list-style: none;
 	li{
