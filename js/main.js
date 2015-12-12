@@ -10,6 +10,8 @@
 		finishedName = 'finished',
 		finishedItems = Cookies.get(finishedName);
 
+	console.log(finishedItems);
+
 	// Create array if not set, else parse it
 	if (!unfinishedItems)
 		unfinishedItems = [];
@@ -19,33 +21,36 @@
 		finishedItems = [];
 	else
 		finishedItems = JSON.parse(finishedItems);
-
 	
-	// Add stored items
-	function appendItems(ul, items){
-		ul.html('');
-		items.forEach(function (item, index){
-			var newItem = $('<li/>');
-			newItem.append('<span>' + item.text + '</span>');
-			newItem.attr('data-index', index);
-			newItem.attr('data-item', true);
+	// Append an item
+	function appendItem(ul, item, index){
+		var newItem = $('<li/>');
+		newItem.append('<span>' + item.text + '</span>');
+		newItem.attr('data-index', index);
+		newItem.attr('data-item', true);
 
-			// Finished or not
-			if (item.finished)
-				newItem.addClass('finished');
-			else
-				newItem.addClass('unfinished');
+		// Finished or not
+		if (item.finished)
+			newItem.addClass('finished');
+		else
+			newItem.addClass('unfinished');
 
-			// Prepend it
-			ul.prepend(newItem);
-		});
+		// Prepend it
+		ul.prepend(newItem);
 	}
+
+	// Append initial items
+	unfinishedItems.forEach(function (item, index){
+		appendItem($unfinishedUl, item, index);
+	});
+	finishedItems.forEach(function (item, index){
+		appendItem($finishedUl, item, index);
+	});
 
 	// Render items to list
 	function render() {
 		// Render both UL:s
-		appendItems($unfinishedUl, unfinishedItems);
-		appendItems($finishedUl, finishedItems);
+		console.log(unfinishedItems);
 	}
 	render();
 
@@ -60,15 +65,34 @@
 				text: val
 			};
 
+		// Validate
+		if (!val)
+			return false;
+
+		// Get last index
+		var lastIndex = unfinishedItems[unfinishedItems.length-1];
+		if (lastIndex)
+			lastIndex = lastIndex.index + 1;
+		else
+			lastIndex = 0;
+
+		console.log(lastIndex);
+
+		item.index = lastIndex;
+
 		// Push
 		unfinishedItems.push(item);
 		Cookies.set(unfinishedName, unfinishedItems);
 
 		// Append
-		var index = unfinishedItems.length - 1;
-
-		// Render
-		render();
+		var $item = $('<li/>');
+		$item.html('<span>' + item.text + '</span>');
+		$item.attr({
+			'data-index': item.index,
+			'data-item': true
+		});
+		$item.addClass('unfinished');
+		$unfinishedUl.prepend($item);
 
 		// Clear input
 		$addInput.val('');
@@ -86,16 +110,26 @@
 	$('body').on('click', '[data-item]', function (){
 		var $this = $(this),
 			index = $this.data('index'),
-			$parent = $this.parent();;
+			$parent = $this.parent();
 
 		// Check if item is in finished or unfinishedul
 		if ($parent.data('unfinished')){
+			// Get actual item index
+			unfinishedItems.forEach(function (val){
+				if (val.index == index)
+					index = val.index;
+			});
+
 			// Check if item is finished or unfinished
 			if ($this.hasClass('unfinished')){
 				//alert("unfinished");
 				unfinishedItems[index].finished = true;
 				Cookies.set(unfinishedName, unfinishedItems);
-				appendItems($unfinishedUl, unfinishedItems);
+
+				//render();
+				$(this)
+					.removeClass('unfinished')
+					.addClass('finished');
 			} else if ($this.hasClass('finished')) {
 				//alert("finished");
 				var item = unfinishedItems[index];
@@ -103,11 +137,20 @@
 				finishedItems.push(item);
 
 				Cookies.set(unfinishedName, unfinishedItems);
+				Cookies.set(finishedName, finishedItems);
 
-				render();
+				//render();
+				$this.remove();
+				// Make append item instead.
 			}
 		} else if ($parent.data('finished')){
+			// Remove it
+			var $this = $(this),
+				index = $this.data('index');
+			finishedItems.splice(index, 1);
+			Cookies.set(finishedName, finishedItems);
 
+			render();
 		}
 	});
 
