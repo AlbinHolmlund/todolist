@@ -1,5 +1,7 @@
 /* Try to add a reset? No? */
 
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,700,900,700italic,400italic,300italic,100italic,100);
+
 *{
 	box-sizing: border-box;
 }
@@ -20,7 +22,7 @@ html, body{
 }
 body{
 	padding: 40px;
-	font-family: Lato;
+	font-family: 'Lato', sans-serif;
 	font-weight: 300;
 	font-size: 24px;
 }
