@@ -102,7 +102,48 @@
 	    }
 	});
 
-	// Remove item
+
+	// Right click event
+    $('body').on("contextmenu", "[data-item]", function(e){
+        e.preventDefault();
+
+		var $this = $(this),
+			index = $this.data('index'),
+			$parent = $this.parent();
+
+		// Get actual item index
+		var item = null;
+		items.forEach(function (val, i){
+			if (val.index == index){
+				item = val;
+			}
+		});
+
+		// Check if item is in finished or unfinishedul
+		if ($parent.data('unfinished')){
+			// Check if item is finished or unfinished
+			if ($this.hasClass('finished')){
+				item.finished = false;
+				Cookies.set(cookieName, items);
+
+				$(this)
+					.removeClass('finished')
+					.addClass('unfinished');
+			}
+		} else if ($parent.data('finished')){
+			item.finished = false;
+			item.inFinishedUl = false;
+			Cookies.set(cookieName, items);
+			var $item = $this;
+			$this
+				.removeClass('finished')
+				.addClass('unfinished');
+			$this.remove();
+			$unfinishedUl.append($item);
+		}
+    });
+
+	// Item events
 	$('body').on('click', '[data-item]', function (){
 		var $this = $(this),
 			index = $this.data('index'),
