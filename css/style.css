@@ -87,7 +87,23 @@ ul.item-list {
         background: #000;
         transform: rotate(-1deg);
         transition: all 0.4s; }
+    ul.item-list li input {
+      font-size: inherit;
+      font-family: inherit;
+      font-weight: inherit;
+      border: 0;
+      background: none;
+      outline: none;
+      display: none; }
+    ul.item-list li.edit span {
+      display: none; }
+    ul.item-list li.edit input {
+      display: block; }
     ul.item-list li.finished span {
       opacity: 0.3; }
       ul.item-list li.finished span:before {
         width: calc(100% + 40px); }
+    ul.item-list li.finished:hover {
+      color: red; }
+      ul.item-list li.finished:hover span:before {
+        background-color: red; }

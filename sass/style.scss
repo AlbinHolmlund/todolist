@@ -118,12 +118,36 @@ ul.item-list{
 				transition: all $ulDur;
 			}
 		}
+		// Edit input
+		input{
+			font-size: inherit;
+			font-family: inherit;
+			font-weight: inherit;
+			border: 0;
+			background: none;
+			outline: none;
+			display: none;
+		}
+		&.edit{
+			span{
+				display: none;
+			}
+			input{
+				display: block;
+			}
+		}
 		// Finished
 		&.finished{
 			span{
 				opacity: 0.3;
 				&:before{
 					width: calc(100% + 40px);
+				}
+			}
+			&:hover{
+				color: red;
+				span:before{
+					background-color: red;
 				}
 			}
 		}
