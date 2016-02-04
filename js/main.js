@@ -159,6 +159,7 @@
 	        /* HERE */
 
 	        $button.addClass('edit');
+	        $button.find('input').focus();
 
 	    } else {
 	        $button.data('alreadyclicked', true);
@@ -221,6 +222,33 @@
 	        $button.data('alreadyclickedTimeout', alreadyclickedTimeout); // store this id to clear if necessary
 	    }
 	    return false;
+	});
+
+	// Edit input finished
+	$('body').on('keydown', '[data-item] input', function (e){
+	    if(e.which === 13) {
+	    	var $this = $(this),
+	    		val = $this.val(),
+	    		$li = $this.closest('li'),
+	    		index = $li.data('index'),
+				arrayIndex = null;
+
+			// Get actual item index
+			var item = null;
+			items.forEach(function (val, i){
+				if (val.index == index){
+					item = val;
+					arrayIndex = i;
+				}
+			});
+
+			// Update item
+			item.text = val;
+			Cookies.set(cookieName, items);
+
+			$li.removeClass('edit');
+			$li.find('span').text(val);
+	    }
 	});
 
 })($);
