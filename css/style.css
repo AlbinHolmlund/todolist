@@ -124,8 +124,8 @@ ul.item-list {
       padding-right: 0; } }
   .container .info {
     display: inline-block;
-    width: 600px;
     background: #f3f3f3;
-    padding: 40px;
+    padding: 0.2em 1em;
+    margin-bottom: 20px;
     border-radius: 20px;
-    box-shadow: 10px 10px 0 #000; }
+    box-shadow: 0 0 0 10px #fbfbfb; }
