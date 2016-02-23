@@ -55,9 +55,13 @@
 			var curTop = $this.position().top;
 			curTop += (topTo - curTop) / 20;
 
+			// Set width
+			var width = $this.closest('ul').width();
+
 			$this.css({
 				top: curTop,
-				left: left
+				left: left,
+				width: width
 			});
 		});
 

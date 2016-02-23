@@ -4,7 +4,6 @@
 	<meta charset="UTF-8" />
 	<meta id="viewport" name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>Todo app</title>
-	<link rel="stylesheet" href="css/grid.css" />
 	<link rel="stylesheet" href="css/style.css" />
 	<style>
 		/*
@@ -16,20 +15,52 @@
 <body>
 
 	<h1>To do, or not to do. That's the question.</h1>
-
-	<input class="add-input" data-add-text type="text" placeholder="Add something to do..."/>
-	<!--<button data-add>Add</button> -->
 	
-	<!-- Unfinished list -->
-	<ul class="item-list" data-list data-unfinished="true">
-		
-	</ul>
+	<div class="container">
+		<!-- Info box -->
+		<div class="right">
+			<div class="info">
+				<p class="small">
+					<strong>Left click:</strong>
+					<br>
+					First time - Finish item
+					<br>
+					Second time - Add to finished list
+					<br>
+					In finished list - Remove item
+				</p>
+				<p class="small">
+					<strong>Right click:</strong>
+					<br>
+					In unfinished list - Make item unfinished
+					<br>
+					In finished list - Move item to unfinished
+				</p>
+				<p class="small">
+					<strong>Double left click</strong>
+					<br>
+					Change item text
+				</p>
+			</div>
+		</div>
+		<!-- Lists -->
+		<div class="left">
+			<input class="add-input" data-add-text type="text" placeholder="Add something to do..."/>
+			<!--<button data-add>Add</button> -->
 
-	<!-- Finished list -->
-	<h2>Finished items</h2>
-	<ul class="item-list" data-list data-finished="true">
-		
-	</ul>
+			<!-- Unfinished list -->
+			<h2>Unfinished items</h2>
+			<ul class="item-list" data-list data-unfinished="true">
+				
+			</ul>
+
+			<!-- Finished list -->
+			<h2>Finished items</h2>
+			<ul class="item-list" data-list data-finished="true">
+				
+			</ul>
+		</div>
+	</div>
 
 	
 	<!-- Scripts -->

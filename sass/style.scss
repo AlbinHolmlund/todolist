@@ -19,6 +19,7 @@ html, body{
 	padding: 0;
 	width: 100%;
 	background: $backClr;
+	font-size: 24px;
 }
 html{
 	height: 100%;
@@ -28,7 +29,6 @@ body{
 	padding-bottom: 400px; // To test mobile
 	font-family: 'Lato', sans-serif;
 	font-weight: 300;
-	font-size: 24px;
 }
 h2{
 	font-weight: 500;
@@ -97,7 +97,6 @@ ul.item-list{
 		position: absolute;
 		top: 0;
 		left: 0;
-		right: 0;
 
 		padding: 10px 0;
 		cursor: pointer;
@@ -124,6 +123,7 @@ ul.item-list{
 			font-family: inherit;
 			font-weight: inherit;
 			border: 0;
+			width: 100%;
 			background: none;
 			outline: none;
 			display: none;
@@ -151,5 +151,37 @@ ul.item-list{
 				}
 			}
 		}
+	}
+}
+
+
+
+// Content
+.small{
+	font-size: 0.6em;
+}
+.container{
+	width: 100%;
+	@media (min-width: 1400px){
+		.left{
+			float: left;
+			width: 40%;
+		}
+		.right{
+			float: right;
+			width: 60%;
+			padding: 20px;
+			padding-right: 0;
+		}
+	}
+	// Components
+	.info{
+		display: inline-block;
+		width: 600px;
+		background: #f3f3f3;
+		padding: 40px;
+
+		border-radius: 20px;
+		box-shadow: 10px 10px 0 #000;
 	}
 }
