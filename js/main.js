@@ -27,8 +27,10 @@
 	
 	// Append an item
 	function appendItem(ul, item, index){
-		var newItem = $('<li/>');
-		newItem.append('<span>' + item.text + '</span>');
+		var newItem = $('<li/>'),
+			html = '<span>' + item.text + '</span>';
+		html += '<input type="text" value="' + item.text + '"/>';
+		newItem.append(html);
 		newItem.attr('data-index', index);
 		newItem.attr('data-item', true);
 
@@ -81,8 +83,10 @@
 		Cookies.set(cookieName, items);
 
 		// Append
-		var $item = $('<li/>');
-		$item.html('<span>' + item.text + '</span>');
+		var $item = $('<li/>'),
+			html = '<span>' + item.text + '</span>';
+		html += '<input type="text" value="' + item.text + '"/>'
+		$item.html(html);
 		$item.attr({
 			'data-index': item.index,
 			'data-item': true
@@ -144,54 +148,107 @@
     });
 
 	// Item events
-	$('body').on('click', '[data-item]', function (){
-		var $this = $(this),
-			index = $this.data('index'),
-			arrayIndex = null,
-			$parent = $this.parent();
+	$('body').on('click', '[data-item]:not(.edit)', function (){
+	    var $button = $(this);
+	    if ($button.data('alreadyclicked')){
+	        $button.data('alreadyclicked', false); // reset
+	        if ($button.data('alreadyclickedTimeout')){
+	            clearTimeout($button.data('alreadyclickedTimeout')); // prevent this from happening
+	        }
+	        // do what needs to happen on double click. 
+	        /* HERE */
 
-		// Get actual item index
-		var item = null;
-		items.forEach(function (val, i){
-			if (val.index == index){
-				item = val;
-				arrayIndex = i;
-			}
-		});
+	        $button.addClass('edit');
+	        $button.find('input').focus();
 
-		// Check if item is in finished or unfinishedul
-		if ($parent.data('unfinished')){
-			// Error
-			if (item === null)
-				alert("Wtf? Why is it null");
+	    } else {
+	        $button.data('alreadyclicked', true);
+	        var alreadyclickedTimeout = setTimeout(function(){
+	            $button.data('alreadyclicked', false); // reset when it happens
+	            // do what needs to happen on single click. 
 
-			// Check if item is finished or unfinished
-			if ($this.hasClass('unfinished')){
-				// Set state to finished
-				item.finished = true;
-				Cookies.set(cookieName, items);
+	            /* HERE */
+				var $this = $button,
+					index = $this.data('index'),
+					arrayIndex = null,
+					$parent = $this.parent();
 
-				$(this)
-					.removeClass('unfinished')
-					.addClass('finished');
-			} else if ($this.hasClass('finished')) {
-				// Add to finished ul
-				item.inFinishedUl = true;
-				Cookies.set(cookieName, items);
+				// Get actual item index
+				var item = null;
+				items.forEach(function (val, i){
+					if (val.index == index){
+						item = val;
+						arrayIndex = i;
+					}
+				});
 
-				console.log(item);
+				// Check if item is in finished or unfinishedul
+				if ($parent.data('unfinished')){
+					// Error
+					if (item === null)
+						alert("Wtf? Why is it null");
 
-				var $item = $this;
-				$this.remove();
-				$finishedUl.prepend($item);
-			}
-		} else if ($parent.data('finished')){
-			// Remove it
-			items.splice(arrayIndex, 1);
+					// Check if item is finished or unfinished
+					if ($this.hasClass('unfinished')){
+						// Set state to finished
+						item.finished = true;
+						Cookies.set(cookieName, items);
+
+						$this
+							.removeClass('unfinished')
+							.addClass('finished');
+					} else if ($this.hasClass('finished')) {
+						// Add to finished ul
+						item.inFinishedUl = true;
+						Cookies.set(cookieName, items);
+
+						console.log(item);
+
+						var $item = $this;
+						$this.remove();
+						$finishedUl.prepend($item);
+					}
+				} else if ($parent.data('finished')){
+					// Remove it
+					items.splice(arrayIndex, 1);
+					Cookies.set(cookieName, items);
+
+					$this.remove();
+				}
+
+	            // use el instead of $(this) because $(this) is 
+	            // no longer the element
+	        },300); // <-- dblclick tolerance here
+	        $button.data('alreadyclickedTimeout', alreadyclickedTimeout); // store this id to clear if necessary
+	    }
+	    return false;
+	});
+
+	// Edit input finished
+	$('body').on('keydown', '[data-item] input', function (e){
+	    if(e.which === 13) {
+	    	var $this = $(this),
+	    		val = $this.val(),
+	    		$li = $this.closest('li'),
+	    		index = $li.data('index'),
+				arrayIndex = null;
+
+			// Get actual item index
+			var item = null;
+			items.forEach(function (val, i){
+				if (val.index == index){
+					item = val;
+					arrayIndex = i;
+				}
+			});
+
+			// Update item
+			item.text = val;
 			Cookies.set(cookieName, items);
 
-			$this.remove();
-		}
+			$li.removeClass('edit');
+			$li.find('span').text(val);
+	    }
 	});
 
 })($);
