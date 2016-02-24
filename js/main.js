@@ -34,6 +34,12 @@
 		newItem.attr('data-index', index);
 		newItem.attr('data-item', true);
 
+		// Edit button
+		var edit = $('<button/>');
+		edit.addClass('edit-btn');
+		edit.html('<i class="icon ion-edit"></i>');
+		newItem.append(edit);
+
 		// Finished or not
 		if (item.finished)
 			newItem.addClass('finished');
@@ -94,6 +100,12 @@
 		$item.addClass('unfinished');
 		$unfinishedUl.prepend($item);
 
+		// Edit button
+		var edit = $('<button/>');
+		edit.addClass('edit-btn');
+		edit.html('<i class="icon ion-edit"></i>');
+		$item.append(edit);
+
 		// Clear input
 		$addInput.val('');
 	}
@@ -148,79 +160,62 @@
     });
 
 	// Item events
-	$('body').on('click', '[data-item]:not(.edit)', function (){
-	    var $button = $(this);
-	    if ($button.data('alreadyclicked')){
-	        $button.data('alreadyclicked', false); // reset
-	        if ($button.data('alreadyclickedTimeout')){
-	            clearTimeout($button.data('alreadyclickedTimeout')); // prevent this from happening
-	        }
-	        // do what needs to happen on double click. 
-	        /* HERE */
+	$('body').on('click', '[data-item]:not(.edit)', function (e){
+		var $this = $(this),
+			index = $this.data('index'),
+			arrayIndex = null,
+			$parent = $this.parent();
 
-	        $button.addClass('edit');
-	        $button.find('input').focus();
+		// If actually clicking on icon
+		if ($(e.target).hasClass('icon')){
+	        $this.addClass('edit');
+	        $this.find('input').focus();
+			return false;
+		}
 
-	    } else {
-	        $button.data('alreadyclicked', true);
-	        var alreadyclickedTimeout = setTimeout(function(){
-	            $button.data('alreadyclicked', false); // reset when it happens
-	            // do what needs to happen on single click. 
+		// Get actual item index
+		var item = null;
+		items.forEach(function (val, i){
+			if (val.index == index){
+				item = val;
+				arrayIndex = i;
+			}
+		});
 
-	            /* HERE */
-				var $this = $button,
-					index = $this.data('index'),
-					arrayIndex = null,
-					$parent = $this.parent();
+		// Check if item is in finished or unfinishedul
+		if ($parent.data('unfinished')){
+			// Error
+			if (item === null)
+				alert("Wtf? Why is it null");
 
-				// Get actual item index
-				var item = null;
-				items.forEach(function (val, i){
-					if (val.index == index){
-						item = val;
-						arrayIndex = i;
-					}
-				});
+			// Check if item is finished or unfinished
+			if ($this.hasClass('unfinished')){
+				// Set state to finished
+				item.finished = true;
+				Cookies.set(cookieName, items);
 
-				// Check if item is in finished or unfinishedul
-				if ($parent.data('unfinished')){
-					// Error
-					if (item === null)
-						alert("Wtf? Why is it null");
+				$this
+					.removeClass('unfinished')
+					.addClass('finished');
+			} else if ($this.hasClass('finished')) {
+				// Add to finished ul
+				item.inFinishedUl = true;
+				Cookies.set(cookieName, items);
 
-					// Check if item is finished or unfinished
-					if ($this.hasClass('unfinished')){
-						// Set state to finished
-						item.finished = true;
-						Cookies.set(cookieName, items);
+				console.log(item);
 
-						$this
-							.removeClass('unfinished')
-							.addClass('finished');
-					} else if ($this.hasClass('finished')) {
-						// Add to finished ul
-						item.inFinishedUl = true;
-						Cookies.set(cookieName, items);
+				var $item = $this;
+				$this.remove();
+				$finishedUl.prepend($item);
+			}
+		} else if ($parent.data('finished')){
+			// Remove it
+			items.splice(arrayIndex, 1);
+			Cookies.set(cookieName, items);
 
-						console.log(item);
+			$this.remove();
+		}
 
-						var $item = $this;
-						$this.remove();
-						$finishedUl.prepend($item);
-					}
-				} else if ($parent.data('finished')){
-					// Remove it
-					items.splice(arrayIndex, 1);
-					Cookies.set(cookieName, items);
-
-					$this.remove();
-				}
-
-	            // use el instead of $(this) because $(this) is 
-	            // no longer the element
-	        },300); // <-- dblclick tolerance here
-	        $button.data('alreadyclickedTimeout', alreadyclickedTimeout); // store this id to clear if necessary
-	    }
 	    return false;
 	});
 
